@@ -1,3 +1,4 @@
+import json
 import sqlite3
 
 
@@ -35,11 +36,11 @@ def get_movie_by_rating(rating):
     with sqlite3.connect('netflix.db') as connection:
         cursor = connection.cursor()
         if rating == 'children':
-            cursor.execute("SELECT title, rating, description FROM netflix WHERE rating = 'G'")
+            cursor.execute("SELECT title, rating, description FROM netflix WHERE rating = 'G' LIMIT 10")
         elif rating == 'family':
-            cursor.execute("SELECT title, rating, description FROM netflix WHERE rating IN ('G', 'PG', 'PG-13')")
+            cursor.execute("SELECT title, rating, description FROM netflix WHERE rating IN ('G', 'PG', 'PG-13')  LIMIT 10")
         elif rating == 'adult':
-            cursor.execute("SELECT title, rating, description FROM netflix WHERE rating IN ('R', 'NC-17')")
+            cursor.execute("SELECT title, rating, description FROM netflix WHERE rating IN ('R', 'NC-17')  LIMIT 10")
         else:
             return 'Ошибка запроса!'
         result = []
@@ -56,7 +57,7 @@ def get_movie_by_rating(rating):
 def get_movie_by_genre(genre):
     with sqlite3.connect('netflix.db') as connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT title, description FROM netflix WHERE listed_in LIKE ? LIMIT 10", (genre,))
+        cursor.execute("SELECT title, description FROM netflix WHERE listed_in LIKE '%{s}%' ORDER BY release_year DESC LIMIT 10".format(s=genre))
         result = []
         for row in cursor.fetchall():
             sql_dict = {
@@ -64,4 +65,37 @@ def get_movie_by_genre(genre):
                         "description": row[1]
                         }
             result.append(sql_dict)
-        return result
+            json_result = json.dumps(result)
+        return json_result
+
+
+def get_two_actors(actor_one, actor_two):
+    with sqlite3.connect('netflix.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute('SELECT "cast" FROM netflix WHERE "cast" != "" LIMIT 5')
+
+        result = cursor.fetchall()
+
+        final_result = [list(i) for i in result]
+        print(final_result)
+        #for one in result:
+        #    print(one)
+            #if one in actor_one:
+            #    print(one)
+
+
+
+
+def get_movie_by_options(kind, year, genre):
+    with sqlite3.connect('netflix.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT title, description FROM netflix WHERE type LIKE '%{t}%' AND release_year = '{y}' AND listed_in LIKE '%{g}%'".format(t=kind, y=year, g=genre))
+        result = []
+        for row in cursor.fetchall():
+            sql_dict = {
+                        "title": row[0],
+                        "description": row[1]
+                        }
+            result.append(sql_dict)
+            json_result = json.dumps(result)
+        return json_result

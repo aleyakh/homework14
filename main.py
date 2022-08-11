@@ -1,5 +1,8 @@
-from utils import get_movie_by_title, get_movie_year_to_year, get_movie_by_rating, get_movie_by_genre
+from utils import get_movie_by_title, get_movie_year_to_year, get_movie_by_rating, get_movie_by_genre, \
+    get_movie_by_options, get_two_actors
 from flask import Flask, jsonify, render_template
+
+
 
 app = Flask(__name__)
 
@@ -24,6 +27,8 @@ def genre_page(genre):
     return get_movie_by_genre(genre)
 
 
-if __name__ == '__main__':
-    app.run()
+print(get_movie_by_options('Movie', 2018, 'Action'))
+print(get_two_actors('Robert', 'Ben'))
+
+if __name__ == '__main__':    app.run()
 
