@@ -23,9 +23,9 @@ def get_movie_by_title(title):
     return sql_dict
 
 
-def get_movie_year_to_year():
+def get_movie_year_to_year(year1, year2):
     cursor = sql_connect()
-    cursor.execute('SELECT title, release_year FROM netflix WHERE release_year BETWEEN 2020 AND 2021 LIMIT 10')
+    cursor.execute(f'SELECT title, release_year FROM netflix WHERE release_year BETWEEN {year1} AND {year2} LIMIT 10')
     result = []
     for row in cursor.fetchall():
         sql_dict = {
