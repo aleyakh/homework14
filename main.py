@@ -1,23 +1,23 @@
 from utils import get_movie_by_title, get_movie_year_to_year, get_movie_by_rating, get_movie_by_genre, \
     get_movie_by_options, get_two_actors
-from flask import Flask
+from flask import Flask, json
 
 app = Flask(__name__)
-
+app.json.ensure_ascii = False
 
 @app.get('/movie/<string:title>')
 def movie_page(title):
     return get_movie_by_title(title)
 
 
-@app.get('/movie/year/to/year')
-def movie_year_to_year():
-    return get_movie_year_to_year()
+@app.get('/movie/<int:year1>/to/<int:year2>')
+def movie_year_to_year(year1, year2):
+    return get_movie_year_to_year(year1, year2)
 
 
 @app.get('/rating/<string:rating>')
 def rating_page(rating):
-    return get_movie_by_rating(rating)
+    return json.dumps(get_movie_by_rating(rating))
 
 
 @app.get('/genre/<string:genre>')
