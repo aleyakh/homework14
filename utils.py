@@ -72,18 +72,21 @@ def get_movie_by_genre(genre):
 def get_two_actors(actor_one, actor_two):
     with sqlite3.connect('netflix.db') as connection:
         cursor = connection.cursor()
-        cursor.execute('SELECT "cast" FROM netflix WHERE "cast" != "" LIMIT 5')
-
-        result = cursor.fetchall()
-
-        final_result = [list(i) for i in result]
-        print(final_result)
-        #for one in result:
-        #    print(one)
-            #if one in actor_one:
-            #    print(one)
-
-
+        cursor.execute('SELECT "cast" FROM netflix WHERE "cast" LIKE "%{one}%" AND "cast" LIKE "%{two}%"'.format(one=actor_one, two=actor_two))
+        count = 0
+        result_list = []
+        for row_one in cursor.fetchall():
+            for row_two in row_one:
+                result_one = set(row_two.split(', '))
+                count += 1
+            if count > 1:
+                result = result.intersection(result_one)
+            else:
+                result = result_one.copy()
+        for res in result:
+            if res not in [actor_one, actor_two]:
+                result_list.append(res)
+        return result_list
 
 
 def get_movie_by_options(kind, year, genre):

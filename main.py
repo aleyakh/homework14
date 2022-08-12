@@ -3,7 +3,6 @@ from utils import get_movie_by_title, get_movie_year_to_year, get_movie_by_ratin
 from flask import Flask, jsonify, render_template
 
 
-
 app = Flask(__name__)
 
 
@@ -27,8 +26,15 @@ def genre_page(genre):
     return get_movie_by_genre(genre)
 
 
+print('Шаг 6:')
 print(get_movie_by_options('Movie', 2018, 'Action'))
-print(get_two_actors('Robert', 'Ben'))
+print('Шаг (5 - 1):')
+print(get_two_actors('Rose McIver', 'Ben Lamb'))
+print('Шаг (5 - 2):')
+print(get_two_actors('Jack Black', 'Dustin Hoffman'))
+print('')
 
-if __name__ == '__main__':    app.run()
+
+if __name__ == '__main__':
+    app.run()
 
