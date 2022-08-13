@@ -79,15 +79,13 @@ def get_two_actors(actor_one, actor_two):
     for row_one in cursor.fetchall():
         for row_two in row_one:
             result_one = set(row_two.split(', '))
+            result_one = result_one.symmetric_difference([actor_one, actor_two])
             count += 1
         if count > 1:
             result = result.intersection(result_one)
         else:
             result = result_one.copy()
-    for res in result:
-        if res not in [actor_one, actor_two]:
-            result_list.append(res)
-    return result_list
+    return result
 
 
 def get_movie_by_options(kind, year, genre):
