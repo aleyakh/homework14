@@ -3,7 +3,7 @@ from utils import get_movie_by_title, get_movie_year_to_year, get_movie_by_ratin
 from flask import Flask, json
 
 app = Flask(__name__)
-app.json.ensure_ascii = False
+#app.json.ensure_ascii = False
 
 @app.get('/movie/<string:title>')
 def movie_page(title):
@@ -12,12 +12,12 @@ def movie_page(title):
 
 @app.get('/movie/<int:year1>/to/<int:year2>')
 def movie_year_to_year(year1, year2):
-    return get_movie_year_to_year(year1, year2)
+    return json.dumps(get_movie_year_to_year(year1, year2))
 
 
 @app.get('/rating/<string:rating>')
 def rating_page(rating):
-    return json.dumps(get_movie_by_rating(rating))
+    return json.dumps(get_movie_by_rating(rating), ensure_ascii=False)
 
 
 @app.get('/genre/<string:genre>')
